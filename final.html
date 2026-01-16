@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bernoulli - Research Intelligence on Telegram</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: '#2FD3C7',
+                        cyan: '#3EE0D6',
+                        softPurple: '#B58CFF',
+                        darkBg: '#050505',
+                        cardBg: '#0D0D0F'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: #050505;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Advanced gradient mesh background */
+        .gradient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(47, 211, 199, 0.4) 0%, transparent 70%);
+            top: -10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(181, 140, 255, 0.3) 0%, transparent 70%);
+            top: 20%;
+            right: -10%;
+            animation-delay: 3s;
+        }
+
+        .orb-3 {
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(62, 224, 214, 0.25) 0%, transparent 70%);
+            bottom: -20%;
+            left: 30%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+        }
+
+        /* Glassmorphism navbar */
+        .glass-nav {
+            background: rgba(13, 13, 15, 0.6);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Animated gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #2FD3C7 0%, #3EE0D6 50%, #B58CFF 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 8s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Holographic card effect */
+        .holo-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .holo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 30%, rgba(47, 211, 199, 0.1) 50%, transparent 70%);
+            transform: rotate(0deg);
+            transition: transform 0.6s ease;
+        }
+
+        .holo-card:hover::before {
+            transform: rotate(180deg);
+        }
+
+        /* Glow effect on hover */
+        .glow-on-hover {
+            transition: all 0.3s ease;
+        }
+
+        .glow-on-hover:hover {
+            box-shadow: 0 0 40px rgba(47, 211, 199, 0.4), 0 0 80px rgba(47, 211, 199, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* Scroll reveal animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #2FD3C7, #B58CFF);
+            border-radius: 10px;
+        }
+
+        /* Magnetic button effect */
+        .magnetic-btn {
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        /* Hero image with parallax container */
+        .parallax-container {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .parallax-layer {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Enhanced feature cards */
+        .feature-card {
+            background: linear-gradient(135deg, rgba(13, 13, 15, 0.8) 0%, rgba(20, 20, 25, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-card:hover {
+            border-color: rgba(47, 211, 199, 0.3);
+            background: linear-gradient(135deg, rgba(13, 13, 15, 0.95) 0%, rgba(20, 20, 25, 1) 100%);
+        }
+
+        /* Animated underline */
+        .animated-underline {
+            position: relative;
+        }
+
+        .animated-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #2FD3C7, #B58CFF);
+            transition: width 0.3s ease;
+        }
+
+        .animated-underline:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="antialiased font-sans bg-darkBg selection:bg-teal selection:text-black">
+
+    <!-- Gradient Mesh Background -->
+    <div class="gradient-mesh">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div class="fixed inset-0 pointer-events-none z-0" id="particles"></div>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal to-cyan flex items-center justify-center overflow-hidden transform group-hover:rotate-12 transition-transform duration-300">
+                        <img src="./support%20image/logo.jpg" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-heading font-bold text-2xl tracking-tight">Bernoulli</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#problem"
+                        class="animated-underline px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors">Problem</a>
+                    <a href="#value"
+                        class="animated-underline px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors">Solution</a>
+                    <a href="#telegram"
+                        class="animated-underline px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors">Why
+                        Telegram</a>
+                    <a href="#community"
+                        class="animated-underline px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white transition-colors">Community</a>
+                </div>
+
+                <a href="https://t.me/Bernoulli000_bot"
+                    class="magnetic-btn relative px-6 py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-teal to-cyan text-black overflow-hidden group">
+                    <span class="relative z-10">Get Started</span>
+                    <div
+                        class="absolute inset-0 bg-white transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative pt-32 pb-24 sm:pt-48 sm:pb-32 overflow-hidden">
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8">
+            <!-- Eyebrow text -->
+            <div class="flex justify-center mb-8 reveal">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal/10 border border-teal/30 backdrop-blur-sm">
+                    <div class="w-2 h-2 rounded-full bg-teal animate-pulse"></div>
+                    <span class="text-sm font-medium text-teal">Powered by AI • Built for Researchers</span>
+                </div>
+            </div>
+
+            <!-- Main heading -->
+            <h1 class="text-center font-heading font-bold tracking-tight mb-8 reveal">
+                <div class="text-6xl md:text-8xl lg:text-9xl mb-4 leading-none">
+                    <span class="block text-white">Analyze Research</span>
+                </div>
+                <div class="text-6xl md:text-8xl lg:text-9xl mb-4 leading-none">
+                    <span class="block gradient-text">With Confidence</span>
+                </div>
+            </h1>
+
+            <p
+                class="mt-8 max-w-3xl mx-auto text-xl md:text-2xl text-center text-gray-400 leading-relaxed mb-12 reveal font-light">
+                Transform your research workflow with AI-powered analysis that understands your objectives.
+                Get instant, defensible results directly in <span class="text-white font-medium">Telegram</span>.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-20 reveal">
+                <a href="https://t.me/Bernoulli000_bot"
+                    class="group relative inline-flex items-center justify-center px-10 py-5 text-lg font-semibold rounded-2xl bg-gradient-to-r from-teal to-cyan text-black overflow-hidden glow-on-hover">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Start Analyzing Now
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </span>
+                </a>
+                <a href="#value"
+                    class="group inline-flex items-center justify-center px-10 py-5 text-lg font-semibold rounded-2xl border-2 border-white/10 hover:border-teal/50 backdrop-blur-sm transition-all duration-300">
+                    <span class="flex items-center gap-2">
+                        See How It Works
+                        <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                        </svg>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Hero Visual -->
+            <div class="reveal parallax-container max-w-6xl mx-auto">
+                <div class="relative rounded-3xl p-1 bg-gradient-to-b from-teal/20 via-cyan/10 to-transparent">
+                    <div
+                        class="relative rounded-[1.4rem] overflow-hidden shadow-2xl bg-cardBg border border-white/10 aspect-video holo-card">
+                        <img src="./hero%20section/Screenshot%202026-01-16%20052928.png" alt="Dashboard"
+                            class="w-full h-full object-cover opacity-90">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-teal/10 to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="relative py-16 reveal">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="text-5xl font-heading font-bold gradient-text mb-2">10x</div>
+                    <div class="text-gray-400">Faster Analysis</div>
+                </div>
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="text-5xl font-heading font-bold gradient-text mb-2">100%</div>
+                    <div class="text-gray-400">Methodology Transparency</div>
+                </div>
+                <div class="feature-card rounded-2xl p-8">
+                    <div class="text-5xl font-heading font-bold gradient-text mb-2">24/7</div>
+                    <div class="text-gray-400">Available on Mobile</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem Section -->
+    <section id="problem" class="relative py-32 overflow-hidden">
+        <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <span
+                    class="inline-block px-4 py-2 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-medium mb-6">The
+                    Challenge</span>
+                <h2 class="text-5xl md:text-6xl font-heading font-bold mb-6">
+                    The Research <span class="gradient-text">Analysis Gap</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                    Traditional tools create barriers. Complex interfaces, steep learning curves, and disconnected
+                    workflows slow down innovation.
+                </p>
+            </div>
+
+            <div class="reveal max-w-5xl mx-auto">
+                <div class="feature-card rounded-3xl p-2 glow-on-hover">
+                    <div
+                        class="rounded-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-black aspect-video relative flex items-center justify-center">
+                        <div class="absolute inset-0 opacity-50">
+                            <!-- Placeholder visual pattern -->
+                            <div class="absolute inset-0"
+                                style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 20px 20px;">
+                            </div>
+                        </div>
+                        <div class="relative z-10 text-center">
+                            <h3 class="text-2xl font-bold text-white mb-2">Hours of Setup</h3>
+                            <p class="text-gray-400">Eliminated by Bernoulli</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Proposition -->
+    <section id="value" class="relative py-32 bg-gradient-to-b from-transparent via-cardBg/30 to-transparent">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <span
+                    class="inline-block px-4 py-2 rounded-full bg-teal/10 border border-teal/30 text-teal text-sm font-medium mb-6">The
+                    Solution</span>
+                <h2 class="text-5xl md:text-6xl font-heading font-bold mb-6">
+                    Research Intelligence <span class="gradient-text">Simplified</span>
+                </h2>
+            </div>
+
+            <div class="space-y-32">
+                <!-- Feature 1 -->
+                <div class="reveal grid lg:grid-cols-2 gap-12 items-center">
+                    <!-- Image Side (Modified to use index.html image) -->
+                    <div class="order-2 lg:order-1">
+                        <div class="feature-card rounded-3xl p-2 h-full glow-on-hover">
+                            <div class="rounded-2xl overflow-hidden bg-cardBg aspect-[4/3] relative">
+                                <img src="./support%20image/card%201.png" alt="Objective Aligned"
+                                    class="absolute inset-0 w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Text Side (user_preview content) -->
+                    <div class="order-1 lg:order-2 space-y-6">
+                        <div
+                            class="inline-block px-4 py-1.5 rounded-full bg-teal/10 border border-teal/30 text-teal text-xs font-medium">
+                            SMART ANALYSIS</div>
+                        <h3 class="text-4xl md:text-5xl font-heading font-bold">Objective-Aligned Analysis</h3>
+                        <p class="text-xl text-gray-400 leading-relaxed">
+                            Bernoulli doesn't just crunch numbers—it understands your <span
+                                class="text-white font-medium">research aims and methodology</span>.
+                            Every statistical test is chosen specifically to answer your research questions.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-teal flex-shrink-0 mt-1" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                                </svg>
+                                <span class="text-gray-300">Contextual test selection based on research design</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-teal flex-shrink-0 mt-1" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                                </svg>
+                                <span class="text-gray-300">Automatic assumption checking and validation</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="reveal grid lg:grid-cols-2 gap-12 items-center">
+                    <!-- Text Side (user_preview content) -->
+                    <div class="space-y-6">
+                        <div
+                            class="inline-block px-4 py-1.5 rounded-full bg-cyan/10 border border-cyan/30 text-cyan text-xs font-medium">
+                            CLEAR INSIGHTS</div>
+                        <h3 class="text-4xl md:text-5xl font-heading font-bold">Deep Interpretation</h3>
+                        <p class="text-xl text-gray-400 leading-relaxed">
+                            Move <span class="text-white font-medium">beyond tables and p-values</span>.
+                            Get clear, detailed explanations that help you confidently write your results and discussion
+                            chapters.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-cyan flex-shrink-0 mt-1" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                                </svg>
+                                <span class="text-gray-300">Plain language explanations of complex statistics</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-cyan flex-shrink-0 mt-1" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                                </svg>
+                                <span class="text-gray-300">Research implications and recommendations</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Image Side (Modified to use index.html image) -->
+                    <div>
+                        <div class="feature-card rounded-3xl p-2 h-full glow-on-hover">
+                            <div class="rounded-2xl overflow-hidden bg-cardBg aspect-[4/3] relative">
+                                <img src="./support%20image/card2.png" alt="Deep Interpretation"
+                                    class="absolute inset-0 w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="reveal grid lg:grid-cols-2 gap-12 items-center">
+                    <!-- Image Side (Modified to use index.html image) -->
+                    <div class="order-2 lg:order-1">
+                        <div class="feature-card rounded-3xl p-2 h-full glow-on-hover">
+                            <div class="rounded-2xl overflow-hidden bg-cardBg aspect-[4/3] relative">
+                                <img src="./support%20image/card3.png" alt="Transparency"
+                                    class="absolute inset-0 w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Text Side (user_preview content) -->
+                    <div class="order-1 lg:order-2 space-y-6">
+                        <div
+                            class="inline-block px-4 py-1.5 rounded-full bg-softPurple/10 border border-softPurple/30 text-softPurple text-xs font-medium">
+                            TRANSPARENCY</div>
+                        <h3 class="text-4xl md:text-5xl font-heading font-bold">Explainable & Defensible</h3>
+                        <p class="text-xl text-gray-400 leading-relaxed">
+                            Every analysis comes with <span class="text-white font-medium">transparent methodology,
+                                assumptions, and code</span>.
+                            Use our outputs to justify your results academically and defend your thesis with confidence.
+                        </p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-softPurple flex-shrink-0 mt-1" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                                </svg>
+                                <span class="text-gray-300">Referenceable methodology descriptions</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <svg class="w-6 h-6 text-softPurple flex-shrink-0 mt-1" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
+                                </svg>
+                                <span class="text-gray-300">Access to underlying analysis code</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Telegram (Content from index.html injected into refined structure) -->
+    <section id="telegram" class="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-b from-cardBg/50 to-darkBg">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div class="mb-12 lg:mb-0 reveal">
+                    <h2 class="text-4xl md:text-5xl font-heading font-bold text-white mb-8">
+                        Why Bernoulli runs on <span class="gradient-text">Telegram</span>
+                    </h2>
+                    <div class="space-y-8">
+                        <div class="flex gap-4 group">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center text-teal group-hover:bg-teal group-hover:text-black transition-all">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">No New Software to Learn</h3>
+                                <p class="text-gray-400">Works inside Telegram, an app researchers already use daily.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center text-teal group-hover:bg-teal group-hover:text-black transition-all">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Mobile & Low Data Friendly</h3>
+                                <p class="text-gray-400">Perfect for students and researchers with limited internet or
+                                    devices.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 group">
+                            <div
+                                class="flex-shrink-0 w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center text-teal group-hover:bg-teal group-hover:text-black transition-all">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-2">Instant Interactive Delivery</h3>
+                                <p class="text-gray-400">Upload data and receive analysis summary directly in chat.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal relative">
+                    <div
+                        class="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-teal/20 border border-white/10 group">
+                        <img src="./support%20image/telegram.png" alt="Bernoulli on Telegram"
+                            class="w-full h-auto transform group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section (from index.html) -->
+    <section id="community" class="relative py-24 sm:py-32">
+        <div class="relative max-w-4xl mx-auto px-4 text-center reveal">
+            <h2 class="text-4xl sm:text-5xl font-heading font-bold text-white mb-6">
+                Join our Research Community
+            </h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+                Be part of our growing research community. Share ideas, get updates, and stay connected with Bernoulli.
+            </p>
+            <a href="https://t.me/Bernoulli000_bot"
+                class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-green-500 hover:bg-green-400 transition-all duration-300 shadow-lg shadow-green-500/30 gap-3 transform hover:-translate-y-1">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-8.68-2.03-.967-.272-.297-.471-.446-.917-.446-4.46.074.893.074.893.074.347 1.288 11.892 1.288 11.892s.198 2.253.248 2.748c.049.495.272.718.52.422.248-.297.893-1.09 1.587-1.485.52-.446.992-1.808 1.487-3.219-5.122-1.405-3.315-.769-1.61-.497-2.303.223.57.198 1.115 11.387 5.464z" />
+                </svg>
+                Join our WhatsApp Group
+            </a>
+        </div>
+    </section>
+
+    <!-- FAQ Section (from index.html) -->
+    <section id="faq" class="relative py-24 sm:py-32">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl font-heading font-bold text-white mb-12 text-center reveal">
+                Frequently Asked Questions
+            </h2>
+
+            <div class="space-y-4 reveal">
+                <!-- Q1 -->
+                <div class="feature-card rounded-2xl overflow-hidden">
+                    <button
+                        class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none hover:bg-white/5 transition-colors"
+                        onclick="toggleFaq(this)">
+                        <span class="text-lg font-medium text-white">How secure is my data on Telegram?</span>
+                        <svg class="w-5 h-5 text-teal transform transition-transform duration-200" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div class="hidden px-6 pb-5 text-gray-400 border-t border-white/5">
+                        Bernoulli uses end-to-end encryption protocols and does not store your raw research data longer
+                        than necessary for analysis.
+                    </div>
+                </div>
+                <!-- Q2 -->
+                <div class="feature-card rounded-2xl overflow-hidden">
+                    <button
+                        class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none hover:bg-white/5 transition-colors"
+                        onclick="toggleFaq(this)">
+                        <span class="text-lg font-medium text-white">Can it handle large datasets?</span>
+                        <svg class="w-5 h-5 text-teal transform transition-transform duration-200" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div class="hidden px-6 pb-5 text-gray-400 border-t border-white/5">
+                        Yes, Bernoulli is optimized to process substantial datasets efficiently.
+                    </div>
+                </div>
+                <!-- Q3 -->
+                <div class="feature-card rounded-2xl overflow-hidden">
+                    <button
+                        class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none hover:bg-white/5 transition-colors"
+                        onclick="toggleFaq(this)">
+                        <span class="text-lg font-medium text-white">Do I need coding knowledge?</span>
+                        <svg class="w-5 h-5 text-teal transform transition-transform duration-200" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div class="hidden px-6 pb-5 text-gray-400 border-t border-white/5">
+                        Not at all. Bernoulli is designed as a natural language interface.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black/50 border-t border-white/5 py-12 backdrop-blur-md">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-8 rounded-lg bg-gradient-to-br from-teal to-cyan flex items-center justify-center font-heading font-bold text-black text-sm text-center pt-1 md:pt-0 pb-1 md:pb-0">
+                    B
+                </div>
+                <span class="font-heading font-bold text-xl text-white">Bernoulli</span>
+            </div>
+
+            <div class="flex gap-8 text-sm text-gray-400">
+                <a href="#" class="hover:text-teal transition-colors">Privacy Policy</a>
+                <a href="#community" class="hover:text-teal transition-colors">Terms</a>
+                <a href="#community" class="hover:text-teal transition-colors">Contact</a>
+            </div>
+
+            <div class="text-gray-500 text-sm">
+                &copy; 2026 Bernoulli. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Reveal animation
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) reveal.classList.add('active');
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('svg');
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        // Particles
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        document.getElementById('particles').appendChild(canvas);
+        let width, height, particles = [];
+
+        function resize() {
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = width; canvas.height = height;
+        }
+        function initParticles() {
+            resize();
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    x: Math.random() * width, y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+                    size: Math.random() * 2, alpha: Math.random() * 0.5
+                });
+            }
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+                ctx.fillStyle = `rgba(47, 211, 199, ${p.alpha})`;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        window.addEventListener('resize', resize);
+        initParticles(); animateParticles();
+    </script>
+</body>
+
+</html>
