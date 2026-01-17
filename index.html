@@ -352,15 +352,18 @@
                 <div class="max-w-7xl mx-auto px-6 lg:px-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         <div class="feature-card rounded-2xl p-8">
-                            <div class="text-5xl font-heading font-bold gradient-text mb-2">10x</div>
+                            <div class="text-5xl font-heading font-bold gradient-text mb-2 counter" data-start="1"
+                                data-target="10" data-suffix="x">1x</div>
                             <div class="text-gray-400">Faster Analysis</div>
                         </div>
                         <div class="feature-card rounded-2xl p-8">
-                            <div class="text-5xl font-heading font-bold gradient-text mb-2">100%</div>
+                            <div class="text-5xl font-heading font-bold gradient-text mb-2 counter" data-start="0"
+                                data-target="100" data-suffix="%">0%</div>
                             <div class="text-gray-400">Methodology Transparency</div>
                         </div>
                         <div class="feature-card rounded-2xl p-8">
-                            <div class="text-5xl font-heading font-bold gradient-text mb-2">24/7</div>
+                            <div class="text-5xl font-heading font-bold gradient-text mb-2 counter" data-start="1"
+                                data-target="24" data-suffix="/7">1/7</div>
                             <div class="text-gray-400">Available on Mobile</div>
                         </div>
                     </div>
@@ -1145,6 +1148,45 @@
         nextBtn.addEventListener('click', () => {
             slider.scrollBy({ left: slider.clientWidth, behavior: 'smooth' });
         });
+
+        // Stats Counter Animation logic
+        const counters = document.querySelectorAll('.counter');
+        const speed = 2000; // Animation duration in ms
+
+        const animateCounter = (counter) => {
+            const start = +counter.getAttribute('data-start');
+            const target = +counter.getAttribute('data-target');
+            const suffix = counter.getAttribute('data-suffix');
+
+            let startTime = null;
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / speed, 1);
+                const currentVal = Math.floor(progress * (target - start) + start);
+
+                counter.innerText = currentVal + suffix;
+
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    counter.innerText = target + suffix;
+                }
+            }
+
+            window.requestAnimationFrame(step);
+        };
+
+        const statsObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => statsObserver.observe(counter));
     </script>
 </body>
 
